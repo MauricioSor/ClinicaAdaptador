@@ -40,6 +40,24 @@ app.get('/api/servicio-salud/medicamentos', async (req, res) => {
     }
 });
 
+// Endpoint para buscar obras sociales (con o sin descripción en la URL)
+app.get('/api/servicio-salud/obras-sociales/:descripcion?', async (req, res) => {
+    const { descripcion } = req.params; // Extrae el parámetro "descripcion" de la ruta
+    try {
+        // Define la URL base
+        const url = descripcion
+            ? `https://istp1service.azurewebsites.net/api/servicio-salud/obras-sociales/${descripcion}`
+            : `https://istp1service.azurewebsites.net/api/servicio-salud/obras-sociales`;
+        // Realiza la solicitud al servidor remoto
+        const response = await axios.get(url);
+
+        // Envía la respuesta al cliente
+        res.json(response.data);
+    } catch (error) {
+        console.error('Error al buscar obras sociales:', error.message);
+        res.status(500).send('Error en el servidor proxy.');
+    }
+});
 // Inicia el servidor
 app.listen(PORT, () => {
     console.log(`Servidor proxy corriendo en http://localhost:${PORT}`);
